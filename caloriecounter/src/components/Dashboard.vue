@@ -2,14 +2,21 @@
     <main>
         <section id="search">
             <div class="search-bar">
-                <input type="text" placeholder="Search..." >
+                <input type="text" placeholder="Wyszukaj..." v-model="searchInput">
                 <button class="searchButton">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
+            <div class="searchContainer" :class="{visible: searchVisible}">                
+                <div class="searchedItems" v-for="item in searched">
+                    <div class="searchedSingleItem" @click="select(item)">
+                        <p> <span>{{item.name}}</span>: {{item.calories}} calories per {{item.grams}}g</p>
+                    </div>
+                </div>
+            </div>
         </section>
         <section id="items" > 
-            <div class="singleItem" v-for="item in items" :key="item.id">
+            <div class="singleItem" v-for="item in selected" :key="item.id">
                 <div class="name"> {{item.name}} </div>
                 <div class="grams">
                     <input type="number" v-model="item.grams"> grams
@@ -26,22 +33,67 @@ export default {
     name: 'dashboard',
     data(){
         return{
+            searchInput: '',
+            searchVisible: false,
+            nothingFound: true,
             items: [
                 {
                     id: 1,
-                    name: 'chicken',
+                    name: 'pierś z kurczaka',
                     grams: 100,
                     calories: 239,
+                    selected: false,
                 },
                 {
                     id: 2,
-                    name: 'steak',
+                    name: 'stek',
                     grams: 100,
-                    calories: 271   
-                }
+                    calories: 271,
+                    selected: false,   
+                },
+                {
+                    id: 3,
+                    name: 'woda',
+                    grams: 100,
+                    calories: 0,
+                    selected: false,  
+                },
+                {
+                    id: 4,
+                    name: 'kawa, espresso',
+                    grams: 100,
+                    calories: 9,
+                    selected: false,  
+                },
             ]
         }
     },
+    methods:{
+        select: function(item){
+            if(!item.selected){
+                item.selected = true;
+            }else{
+                item.selected = false;
+            }
+        }
+    },
+    computed:{
+        //search engine
+        searched: function(){
+            let search = this.searchInput.toLowerCase();
+            if(this.searchInput == ''){
+                this.searchVisible = false;
+                return
+            } else {
+                this.nothingFound = false;
+                this.searchVisible = true;
+                return this.items.filter(item => item.name.match(search)); 
+            }
+        },
+        selected: function(){
+            return this.items.filter(item => item.selected == true);
+        },
+    }
 }
 </script>
 
@@ -98,12 +150,40 @@ export default {
         outline: none;
     }
 
+    .searchContainer{
+        margin: 0 auto;
+        margin-top: 5px;
+        border: 1px solid lavender;
+        border-radius: 10px;
+        display: none;
+    }
+    .visible{
+        display: flex;
+        flex-direction:column;
+    }
+
+    .searchedItems:nth-child(even){
+        background-color: #f5f5f5;
+    }
+    .searchedItems:last-child{
+        border-radius: 0px 0px 10px 10px;
+    }
+
+    .searchedSingleItem{
+        display: flex;
+        justify-content: center;
+    }
+    .searchedSingleItem span{
+        font-weight: 700;
+    }
+
     .singleItem{
         padding: 20px;
         border-radius: 10px;
         background-color: #bae1ff;
         margin-bottom: 3px;
     }
+
 
     /* Phones */
     @media screen and (max-width: 600px){
@@ -113,6 +193,14 @@ export default {
             "items items items items items items items items items items items items" 
             "output output output output output output output output output output output output";
         }
+
+        .searchedItems{
+            margin: 0 auto;
+            margin-top: 4px;
+            padding: 10px;
+            width: 60%;
+        }
+
         .search-bar input{
             width: 70%;
         }
@@ -121,6 +209,9 @@ export default {
             margin: 0 auto;
             margin-bottom: 10px;
             width: 90%;
+        }
+        .searchContainer{
+            width: 78%;
         }
     }
     /* Tablets and small laptops */
@@ -133,6 +224,14 @@ export default {
         .search-bar input{
             width: 60%;
         }
+        .searchContainer{
+            width: 65%;
+        }
+        .searchedSingleItem{
+            margin: 0 auto;
+            margin-bottom: 5px;
+            padding: 10px;
+        }
     }
     /* PC */
     @media screen and (min-width: 1000px){
@@ -142,6 +241,9 @@ export default {
         }
         .search-bar input{
             width: 80%;
+        }
+        .searchContainer{
+            width: 85%;
         }
     }
 
