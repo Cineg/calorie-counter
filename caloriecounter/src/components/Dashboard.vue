@@ -13,6 +13,11 @@
                         <p> <span>{{item.name}}</span>: {{item.calories}} kcal na {{item.grams}}g</p>
                     </div>
                 </div>
+            <router-link to="/add">
+                <div class="addItem">
+                    <p> Nie ma tego, czego szukasz? Dodaj produkt. <i class="fas fa-shopping-cart"></i></i></p>
+                </div>
+            </router-link>
             </div>
         </section>
         <section id="items" > 
@@ -34,6 +39,9 @@
 </template>
 
 <script>
+import db from './firebaseInit'
+import firebase from 'firebase'
+
 export default {
     name: 'dashboard',
     data(){
@@ -42,45 +50,24 @@ export default {
             searchVisible: false,
             nothingFound: true,
             kcalCalculated: 0,
-            items: [
-                {
-                    id: 1,
-                    name: 'pierś z kurczaka',
-                    grams: 100,
-                    gramsEaten: 100,
-                    calories: 239,
-                    caloriesEaten: 239,
-                    selected: false,
-                },
-                {
-                    id: 2,
-                    name: 'stek',
-                    grams: 100,
-                    gramsEaten: 100,
-                    calories: 271,
-                    caloriesEaten: 271,
-                    selected: false,   
-                },
-                {
-                    id: 3,
-                    name: 'woda',
-                    grams: 100,
-                    gramsEaten: 100,
-                    calories: 0,
-                    caloriesEaten: 0,
-                    selected: false,  
-                },
-                {
-                    id: 4,
-                    name: 'kawa, espresso',
-                    grams: 100,
-                    gramsEaten: 100,
-                    calories: 9,
-                    caloriesEaten: 9,
-                    selected: false,  
-                },
-            ]
+            items: []
         }
+    },
+    created(){
+        db.collection('food').get().then(querySnapshot => {
+            querySnapshot.forEach(doc => {
+                const data = {
+                    'id': doc.id,
+                    'name': doc.data().name,
+                    'calories': doc.data().calories,
+                    'grams': doc.data().grams,
+                    'gramsEaten': doc.data().grams,
+                    'caloriesEaten': doc.data().calories,
+                    'selected': false,     
+                }
+                this.items.push(data);
+            })
+        })
     },
     methods:{
         select: function(item){
@@ -104,7 +91,7 @@ export default {
                 return sum + item.caloriesEaten;
             }, 0)
             this.kcalCalculated = Math.round(kcal * 100) / 100;
-            
+            console.log(this.searched.length)
         }   
     },
     computed:{
@@ -135,15 +122,13 @@ export default {
 </script>
 
 <style scoped>
-    @import url('https://fonts.googleapis.com/css?family=Roboto');
+    
     
     main{
         display: grid;
         margin-top: 60px;
         grid-template-columns: repeat(12, 1fr);
         grid-column-gap: 5px;
-        font-family: 'Roboto', sans-serif;
-        color: #2c3e50;
     }
     #search{
         grid-area: search;
@@ -234,6 +219,17 @@ export default {
         border: 0;
         border-radius: 5px;
         width: 65px;
+    }
+
+    a{
+        text-decoration: none;
+        color: #2c3e50;
+    }
+    .addItem{
+        padding: 10px;
+        background-color: #2c3e50;
+        border-radius: 10px;
+        color: #ededed;
     }
 
     /* Phones */
