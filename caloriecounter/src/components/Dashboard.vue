@@ -1,6 +1,14 @@
 <template>
     <main>
         <section id="search">
+            <div class="info">        
+                <h4>Wyszukaj i wybierz produkty, aby wyliczyć kalorie! <br />
+                <span>
+                    <i class="fas fa-angle-double-down"></i>
+                    <i class="fas fa-balance-scale"></i> 
+                </span>
+                </h4>
+            </div>
             <div class="search-bar">
                 <input type="text" placeholder="Wyszukaj..." v-model="searchInput">
                 <button class="searchButton">
@@ -21,6 +29,14 @@
             </div>
         </section>
         <section id="items" > 
+            <div class="info">
+                <h4>Twoje wybrane produkty! <br />
+                <span>
+                <i class="fas fa-angle-double-down"></i>
+                <i class="fas fa-clipboard-list"></i>
+                </span>
+                </h4>
+            </div>
             <div class="singleItem" v-for="item in selected" :key="item.id">
                 <div class="close"  @click="select(item)" ><i class="fas fa-trash-alt"></i></div>
                 <div class="name"> {{item.name}} </div>
@@ -28,12 +44,36 @@
                     <input type="number" v-model="item.gramsEaten" @blur="calculateEatenCalories(item)" 
                     @change="calculateEatenCalories(item)" @input="calculateEatenCalories(item)">g
                 </div>
-                <div class="calories">{{item.calories}} kcal</div>
+                <div class="calories">{{item.caloriesEaten}} kcal</div>
             </div>
         </section>
         <section id="output"> 
-            <div class="kcal">{{kcalCalculated}} kcal</div>
-            <button @click="calcAll">Click Me</button>
+            <div class="info">
+                <h4>Wyliczone kalorie oraz składniki! <br />
+                <span>
+                <i class="fas fa-angle-double-down"></i>
+                <i class="fas fa-burn"></i>
+                </span>
+                </h4>
+            </div>
+            <div class="kcal" v-if="kcalCalculated">{{kcalCalculated}} kcal</div>
+            <div class="macros">
+                <div >
+                    <div id="fat">
+                        Tłuszcz: {{fatCalculated}}g
+                    </div>
+                </div>
+                <div >
+                    <div id="carb">
+                        Węglowodany: {{carbCalculated}}g
+                        </div>
+                </div>
+                <div>
+                    <div id="prot">
+                        Białko: {{proteinCalculated}}g
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 </template>
@@ -50,6 +90,10 @@ export default {
             searchVisible: false,
             nothingFound: true,
             kcalCalculated: 0,
+            fatCalculated: 0,
+            carbCalculated: 0,
+            proteinCalculated: 0,
+            allMacros: 0,
             items: []
         }
     },
@@ -63,6 +107,12 @@ export default {
                     'grams': doc.data().grams,
                     'gramsEaten': doc.data().grams,
                     'caloriesEaten': doc.data().calories,
+                    'fat': doc.data().fat,
+                    'fatEaten': doc.data().fat,
+                    'carb': doc.data().carb,
+                    'carbEaten': doc.data().carb,
+                    'protein': doc.data().protein,
+                    'proteinEaten': doc.data().protein,
                     'selected': false,     
                 }
                 this.items.push(data);
@@ -80,19 +130,67 @@ export default {
             }
         },
         calculateEatenCalories: function(item){
+            //calculate how many calories etc eaten in each item
             let kcal = item.calories * (item.gramsEaten/item.grams);
+            let fats = item.fat * (item.gramsEaten/item.grams);
+            let carbs = item.carb * (item.gramsEaten/item.grams);
+            let proteins = item.protein * (item.gramsEaten/item.grams);
+
+            
             item.caloriesEaten = kcal.toFixed(2);
             item.caloriesEaten = parseFloat(item.caloriesEaten);
+            item.fatEaten = fats.toFixed(2);
+            item.fatEaten = parseFloat(item.fatEaten);
+            item.carbEaten= carbs.toFixed(2);
+            item.carbEaten = parseFloat(item.carbEaten);
+            item.proteinEaten= proteins.toFixed(2);
+            item.proteinEaten = parseFloat(item.proteinEaten);
+
             this.calcAll();
         },
         calcAll: function(){
+            //get all items added
             let items = this.items.filter(item => item.selected == true);
+
+            //sum items values
             let kcal = items.reduce((sum, item) => {
-                return sum + item.caloriesEaten;
+                return sum + parseFloat(item.caloriesEaten);
             }, 0)
+            let fats = items.reduce((sum, item) => {
+                return sum + parseFloat(item.fatEaten);
+            }, 0)
+            let carbs = items.reduce((sum, item) => {
+                return sum + parseFloat(item.carbEaten);
+            }, 0)
+            let proteins = items.reduce((sum, item) => {
+                return sum + parseFloat(item.proteinEaten);
+            }, 0)
+            
+            //round to two places after decimal
             this.kcalCalculated = Math.round(kcal * 100) / 100;
-            console.log(this.searched.length)
-        }   
+            this.fatCalculated = Math.round(fats * 100) / 100;
+            this.carbCalculated = Math.round(carbs * 100) / 100;
+            this.proteinCalculated = Math.round(proteins * 100) / 100;
+            
+            this.computedBars();
+            
+        },
+    computedBars: function(){
+        this.allMacros = parseFloat(this.fatCalculated)+parseFloat(this.carbCalculated)+parseFloat(this.proteinCalculated);
+        let fat = document.getElementById('fat');
+        let carb = document.getElementById('carb');
+        let prot = document.getElementById('prot');
+
+        let percent = 100 / this.allMacros;
+        let percentRoundFat = Math.round(this.fatCalculated * percent);
+        let percentRoundCarb = Math.round(this.carbCalculated * percent);
+        let percentRoundProt = Math.round(this.proteinCalculated * percent)
+        
+        fat.style.height = percentRoundFat + '%';
+        carb.style.height = percentRoundCarb + '%';
+        prot.style.height = percentRoundProt + '%';
+    }
+
     },
     computed:{
         //search engine
@@ -112,11 +210,6 @@ export default {
         selected: function(){
             return this.items.filter(item => item.selected == true);
         },
-        calcCalories: function(){
-            this.selected.reduce((sum, item) => {
-                return sum + item.caloriesEaten;
-            }, 0)
-        }
     }
 }
 </script>
@@ -135,6 +228,7 @@ export default {
         text-align: center;
         margin-bottom: 30px;
     }
+
     #items{
         grid-area: items;
         text-align: center;
@@ -219,6 +313,9 @@ export default {
         border: 0;
         border-radius: 5px;
         width: 65px;
+        -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
     }
 
     a{
@@ -230,6 +327,65 @@ export default {
         background-color: #2c3e50;
         border-radius: 10px;
         color: #ededed;
+    }
+
+    .singleItem{
+        -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
+    }
+
+    .info{
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto;
+        margin-bottom: 15px;
+        width: 300px;
+        height: 90px;
+        padding: 15px;
+        -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
+        border-radius: 50px 50px 50px 50px;
+        align-content: center;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+    .info span{
+        font-size: 120%;
+    }
+
+    .macros{
+        display: flex;
+        justify-content: center;
+    }
+    .macros >div{
+        background-color: #fcfcfc;
+        margin: 3px;
+        height: 200px;
+        width: 65px;
+        display: flex;
+        align-items: flex-end;
+        font-size: 8px;
+        -webkit-box-shadow: 5px 0px 5px -3px rgba(0,0,0,0.75);
+        -moz-box-shadow: 5px 0px 5px -3px rgba(0,0,0,0.75);
+        box-shadow: 5px 0px 5px -3px rgba(0,0,0,0.75);
+    }
+
+    #fat{
+        justify-content: center;
+        background-color: lemonchiffon;
+        width:65px;
+    }
+    #carb{
+        background-color: lightsalmon;
+        justify-content: center;
+        width: 65px;
+    }
+    #prot{
+        background-color: powderblue;
+        justify-content: center;
+        width: 65px;
     }
 
     /* Phones */
@@ -258,9 +414,9 @@ export default {
             justify-content: center;
             align-items: center;
             margin: 0 auto;
-            background-color: #efefef;
             border-radius: 10px;
             margin-bottom: 10px;
+            
         }
 
         .singleItem .close{
@@ -297,7 +453,6 @@ export default {
             justify-content: center;
             align-items: center;
             margin: 0 auto;
-            background-color: #efefef;
             border-radius: 10px;
             margin-bottom: 10px;
         }
@@ -323,11 +478,10 @@ export default {
         .singleItem{
             display: grid;
             width: 77%;
-            grid-template-columns: 15% 25% 40% 20%;
+            grid-template-columns: 20% 40% 20% 20%;
             justify-content: center;
             align-items: center;
             margin: 0 auto;
-            background-color: #efefef;
             border-radius: 10px;
             margin-bottom: 10px;
         }
