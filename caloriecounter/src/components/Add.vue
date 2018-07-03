@@ -1,5 +1,9 @@
 <template>
     <section>
+        <router-link to="/">
+            <button class="arrowBack"><i class="fas fa-long-arrow-alt-left"></i> <span>Powrót</span> </button>
+        </router-link>
+        
         <div class="info"><h3>Proszę, uzupełnij pola poniżej:</h3> </div>
         <form action="">
             <input type="text" placeholder="Nazwa produktu" required v-model="name">
@@ -44,6 +48,9 @@ export default {
                     carb: this.carb,
                     protein: this.protein,
                 }
+                    if(data.fat == ''){ data.fat = 0};
+                    if(data.carb == ''){ data.carb = 0};
+                    if(data.protein == ''){ data.protein = 0};
                 db.collection('food').add(data).then(this.$router.push('/'));
             }
         }
@@ -63,7 +70,7 @@ export default {
         flex-direction: column;
         margin-top: 70px;
         align-items: center;
-        background-color: #FFEDF4;
+        background-color: #7FDBFF;
     }
     h3{
         margin-bottom: 20px;
@@ -95,21 +102,45 @@ export default {
     }
 
     button{
+        cursor: pointer;
         margin-top: 5px;
         padding: 8px;
         width: 40px;
         height: 40px;
-        background-color: lightskyblue;
+        background-color: #0074D9;
         border: none;
         border-radius: 50%;
         color: mintcream;
         -webkit-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.75);
         -moz-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.75);
         box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.75);
+        font-size: 20px;
     }
 
     input:focus, button:focus{
         outline: 0;
+    }
+    .arrowBack{
+        -webkit-box-shadow: 2px 2px 2px -2px rgba(0,0,0,0.75);
+        -moz-box-shadow: 2px 2px 2px -2px rgba(0,0,0,0.75);
+        box-shadow: 2px 2px 2px -2px rgba(0,0,0,0.75);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        top: -50px;
+        left: -80px;
+        font-size: 30px;
+        padding: 0;
+        border-radius: 0;
+        width: 120px;
+    }
+    .arrowBack span{
+        font-size: 20px;
+        padding-left: 10px;
+    }
+    a {
+        text-decoration: none;
     }
 </style>
 

@@ -56,24 +56,24 @@
                 </span>
                 </h4>
             </div>
-            <div class="kcal" v-if="kcalCalculated">{{kcalCalculated}} kcal</div>
             <div class="macros">
                 <div >
-                    <div id="fat">
+                    <div id="fat" :style="{height: [fatHeight+'%']}">
                         Tłuszcz: {{fatCalculated}}g
                     </div>
                 </div>
                 <div >
-                    <div id="carb">
+                    <div id="carb" :style="{height: [carbHeight+'%']}">
                         Węglowodany: {{carbCalculated}}g
                         </div>
                 </div>
                 <div>
-                    <div id="prot">
+                    <div id="prot" :style="{height: [protHeight+'%']}">
                         Białko: {{proteinCalculated}}g
                     </div>
                 </div>
             </div>
+            <div class="kcal" v-if="kcalCalculated">{{kcalCalculated}} kcal</div>
         </section>
     </main>
 </template>
@@ -94,6 +94,9 @@ export default {
             carbCalculated: 0,
             proteinCalculated: 0,
             allMacros: 0,
+            fatHeight: 0,
+            carbHeight: 0,
+            protHeight: 0,
             items: []
         }
     },
@@ -130,13 +133,12 @@ export default {
             }
         },
         calculateEatenCalories: function(item){
+
             //calculate how many calories etc eaten in each item
             let kcal = item.calories * (item.gramsEaten/item.grams);
             let fats = item.fat * (item.gramsEaten/item.grams);
             let carbs = item.carb * (item.gramsEaten/item.grams);
-            let proteins = item.protein * (item.gramsEaten/item.grams);
-
-            
+            let proteins = item.protein * (item.gramsEaten/item.grams);            
             item.caloriesEaten = kcal.toFixed(2);
             item.caloriesEaten = parseFloat(item.caloriesEaten);
             item.fatEaten = fats.toFixed(2);
@@ -177,18 +179,15 @@ export default {
         },
     computedBars: function(){
         this.allMacros = parseFloat(this.fatCalculated)+parseFloat(this.carbCalculated)+parseFloat(this.proteinCalculated);
-        let fat = document.getElementById('fat');
-        let carb = document.getElementById('carb');
-        let prot = document.getElementById('prot');
 
         let percent = 100 / this.allMacros;
         let percentRoundFat = Math.round(this.fatCalculated * percent);
         let percentRoundCarb = Math.round(this.carbCalculated * percent);
         let percentRoundProt = Math.round(this.proteinCalculated * percent)
         
-        fat.style.height = percentRoundFat + '%';
-        carb.style.height = percentRoundCarb + '%';
-        prot.style.height = percentRoundProt + '%';
+        this.fatHeight = percentRoundFat;
+        this.carbHeight = percentRoundCarb ;
+        this.protHeight = percentRoundProt;
     }
 
     },
@@ -355,6 +354,17 @@ export default {
         font-size: 120%;
     }
 
+    .kcal{
+        margin: 0 auto;
+        padding: 30px;
+        width: 150px;
+        transition: 1s;
+        -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
+        margin-top: 15px;
+    }
+
     .macros{
         display: flex;
         justify-content: center;
@@ -376,16 +386,22 @@ export default {
         justify-content: center;
         background-color: lemonchiffon;
         width:65px;
+        min-height: 10px;
+        transition: 2s;
     }
     #carb{
         background-color: lightsalmon;
         justify-content: center;
         width: 65px;
+        min-height: 10px;
+         transition: 2s;
     }
     #prot{
         background-color: powderblue;
         justify-content: center;
         width: 65px;
+        min-height: 10px;
+        transition: 2s;
     }
 
     /* Phones */
