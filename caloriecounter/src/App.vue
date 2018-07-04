@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style>
-  @import url('https://fonts.googleapis.com/css?family=Roboto');
+  @import url('https://fonts.googleapis.com/css?family=Montserrat');
  * {
    box-sizing: border-box;
    margin: 0; padding: 0;
@@ -19,8 +19,11 @@ export default {
 
   #app{
     margin: 0 auto;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     color: #2c3e50;
+  }
+  body{
+    overflow: hidden;
   }
 
 </style>
