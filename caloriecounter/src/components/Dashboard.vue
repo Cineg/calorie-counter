@@ -1,79 +1,73 @@
 <template>
     <main>
+        <side-menu />
         <section id="search">
             <div class="info">        
-                <h4>Wyszukaj i wybierz produkty, aby wyliczyć kalorie! <br />
-                <span>
-                    <i class="fas fa-angle-double-down"></i>
-                    <i class="fas fa-balance-scale"></i> 
-                </span>
-                </h4>
+                <h1>Dodaj swoje produkty</h1>
             </div>
-            <div class="search-bar">
-                <input type="text" placeholder="Wyszukaj..." v-model="searchInput">
-                <button class="searchButton">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
+            <input type="text" placeholder="Wyszukaj..." v-model="searchInput" id="searchBar">
             <div class="searchContainer" :class="{visible: searchVisible}">                
                 <div class="searchedItems" v-for="item in searched">
                     <div class="searchedSingleItem" @click="select(item)">
-                        <p> <span>{{item.name}}</span>: {{item.calories}} kcal na {{item.grams}}g</p>
+                        <p> <span>{{item.name}}</span></p>
                     </div>
                 </div>
             <router-link to="/add">
                 <div class="addItem">
-                    <p> Nie ma tego, czego szukasz? Dodaj produkt. <i class="fas fa-shopping-cart"></i></i></p>
+                    <p> Nie znalazłeś? Dodaj produkt!</p>
                 </div>
             </router-link>
             </div>
         </section>
         <section id="items" > 
             <div class="info">
-                <h4>Twoje wybrane produkty! <br />
-                <span>
-                <i class="fas fa-angle-double-down"></i>
-                <i class="fas fa-clipboard-list"></i>
-                </span>
-                </h4>
+                <h1> Wybrane </h1>
             </div>
             <div class="singleItem" v-for="item in selected" :key="item.id">
-                <div class="close"  @click="select(item)" ><i class="fas fa-trash-alt"></i></div>
-                <div class="name"> {{item.name}} </div>
-                <div class="grams">
-                    <input type="number" v-model="item.gramsEaten" @blur="calculateEatenCalories(item)" 
-                    @change="calculateEatenCalories(item)" @input="calculateEatenCalories(item)">g
+                <button class="close"  @click="select(item)" ><i class="fas fa-trash-alt"></i></button>
+                <div class="singleItemInfo">
+                    <div class="name"> {{item.name}} </div>
+                    <div class="grams">
+                        <input type="number" v-model="item.gramsEaten" @blur="calculateEatenCalories(item)" 
+                        @change="calculateEatenCalories(item)" @input="calculateEatenCalories(item)">g
+                    </div>
                 </div>
-                <div class="calories">{{item.caloriesEaten}} kcal</div>
             </div>
         </section>
         <section id="output"> 
             <div class="info">
-                <h4>Wyliczone kalorie oraz składniki! <br />
-                <span>
-                <i class="fas fa-angle-double-down"></i>
-                <i class="fas fa-burn"></i>
-                </span>
-                </h4>
+                <h1>Wyniki</h1>
             </div>
-            <div class="macros">
-                <div >
-                    <div id="fat" :style="{height: [fatHeight+'%']}">
-                        Tłuszcz: {{fatCalculated}}g
-                    </div>
-                </div>
-                <div >
-                    <div id="carb" :style="{height: [carbHeight+'%']}">
-                        Węglowodany: {{carbCalculated}}g
+            <div class="macros" v-if="kcalCalculated">
+                <div class="kcal" >{{kcalCalculated}} kcal</div>
+                <div class="chart">
+                    <div class="macroItem">
+                        <div class="macroBar">
+                            <div id="fat" :style="{height: [fatHeight+'%']}">
+                                Tłuszcze
+                            </div>
                         </div>
-                </div>
-                <div>
-                    <div id="prot" :style="{height: [protHeight+'%']}">
-                        Białko: {{proteinCalculated}}g
+                        <span>{{fatCalculated}}g</span>
                     </div>
+                    <div class="macroItem">
+                        <div class="macroBar">
+                            <div id="carb" :style="{height: [carbHeight+'%']}">
+                                Węglowod.
+                            </div>
+                        </div>
+                        <span>{{carbCalculated}}g</span>
+                    </div>
+                    <div class="macroItem">
+                        <div class="macroBar">
+                            <div id="prot" :style="{height: [protHeight+'%']}">
+                                Białko
+                            </div>
+                        </div>
+                        <span>{{proteinCalculated}}g</span>
+                    </div>
+       
                 </div>
             </div>
-            <div class="kcal" v-if="kcalCalculated">{{kcalCalculated}} kcal</div>
         </section>
     </main>
 </template>
@@ -81,9 +75,13 @@
 <script>
 import db from './firebaseInit'
 import firebase from 'firebase'
+import SideMenu from './SideMenu'
 
 export default {
     name: 'dashboard',
+    components: {
+        SideMenu,
+    },
     data(){
         return{
             searchInput: '',
@@ -216,298 +214,192 @@ export default {
 <style scoped>
     
     
+    a{
+        text-decoration: none;
+    }
+    
     main{
         display: grid;
-        margin-top: 60px;
-        grid-template-columns: repeat(12, 1fr);
-        grid-column-gap: 5px;
+        grid-template-columns: 160px 1fr 1fr 1fr;
+        background: url('../assets/dashboardbg.svg');
+        background-repeat: no-repeat;
+        background-position: right;
+        grid-column-gap: 8vw;
     }
-    #search{
-        grid-area: search;
-        text-align: center;
-        margin-bottom: 30px;
+    
+    section{
+        margin-top: 198px;
     }
 
-    #items{
-        grid-area: items;
-        text-align: center;
-    }
-    #output{
-        grid-area: output;
+    h1{
+        font-size: 36px;
+        margin-bottom: 63px;
         text-align: center;
     }
 
-
-    .search-bar{
-        display: flex;
-        justify-content: center;
+    input:focus{
+        outline: 0;
     }
 
-    .search-bar input{
-        padding: 15px;
+    #searchBar{
+        width: 400px;
+        height: 50px;
+        font-size: 20px;
         border: 0;
-        border-top: 1px solid lightgray;
-        border-left: 1px solid lightgray;
-        border-bottom: 1px solid lightgray;
-        border-radius: 10px 0px 0px 10px;
-    }
-    .search-bar button{
-        padding: 15px;
-        border: 0px;
-        margin: 0;
-        background-color: dimgray;
-        color: white;
-        border-radius: 0px 10px 10px 0px;
-        cursor: pointer;
-    }
-
-    .search-bar input:focus, .search-bar button:focus, .grams input:focus{
-        outline: none;
+        -webkit-box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
+        -moz-box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
+        box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
+        padding: 0 25px;
+        color: #B8B8B8;
     }
 
     .searchContainer{
-        margin: 0 auto;
-        margin-top: 5px;
-        border: 1px solid lavender;
-        border-radius: 10px;
         display: none;
+        margin-top: 16px;
+        -webkit-box-shadow: 0px 5px 6px 0px rgba(0,0,0,0.16);
+        -moz-box-shadow: 0px 5px 6px 0px rgba(0,0,0,0.16);
+        box-shadow: 0px 5px 6px 0px rgba(0,0,0,0.16);
     }
     .visible{
-        display: flex;
-        flex-direction:column;
+        display: block;
     }
 
     .searchedItems{
-        transition: background-color 1s ease;
+        background-color:#F9F8F8;
+        color: #B8B8B8;
+        transition: 1s;
     }
-
     .searchedItems:nth-child(even){
-        background-color: #f5f5f5;
-    }
-    .searchedItems:last-child{
-        border-radius: 0px 0px 10px 10px;
+        background-color: #F3EFEF;
     }
 
     .searchedSingleItem{
-        display: flex;
-        justify-content: center;
+        height: 47px;
+        transition: 1s;
         cursor: pointer;
-    }
-    .searchedItems:hover{
         display: flex;
-        justify-content: center;
-        cursor: pointer;
-        background-color: rgba(122, 189, 206, 0.2);
+        align-items: center;
+        padding-left: 24px;
+        font-size: 15px;
     }
-    .searchedItems:nth-child(even):hover{
-        background-color: rgba(122, 189, 206, 0.2);
-    }
-
-    .searchedSingleItem span{
-        font-weight: 700;
-    }
-
-    .grams input{
-        padding: 3px;
-        border: 0;
-        border-radius: 5px;
-        width: 65px;
-        -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
-        -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
-        box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
-    }
-
-    a{
-        text-decoration: none;
-        color: #2c3e50;
+    .searchedSingleItem:hover{
+        color: #000;
     }
     .addItem{
-        padding: 10px;
-        background-color: #2c3e50;
-        border-radius: 10px;
-        color: #ededed;
+        text-align: center;
+        padding: 19px 0;
+        color: #707070;
     }
 
     .singleItem{
-        -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
-        -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
-        box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
+        display: grid;
+        width: 339px;
+        height: 55px;
+        grid-template-columns: 55px 1fr;
+        margin-bottom: 3px;
+        -webkit-box-shadow: 0px 1px 15px 0px rgba(0,0,0,0.08);
+        -moz-box-shadow: 0px 1px 15px 0px rgba(0,0,0,0.08);
+        box-shadow: 0px 1px 15px 0px rgba(0,0,0,0.08);
     }
 
-    .info{
-        display: flex;
-        flex-direction: column;
-        margin: 0 auto;
-        margin-bottom: 15px;
-        width: 300px;
-        height: 90px;
-        padding: 15px;
-        -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
-        -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
-        box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
-        border-radius: 50px 50px 50px 50px;
-        align-content: center;
+    .singleItem button{
+        background-color: #DFA0A0;
+        border: 0;
+        color: #fff;
+        font-size: 30px;
+    }
+
+    .singleItemInfo{
+        padding-left: 20px;
+        background-color: #fff;
+        color: #5D5C5C;
+        display: grid;
+        grid-template-columns: 70% 30%;
+        font-size: 14px;
+        text-overflow: clip;
         justify-content: center;
-        margin-bottom: 15px;
+        align-content: center;
     }
-    .info span{
-        font-size: 120%;
+    .grams{
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
-
-    .kcal{
-        margin: 0 auto;
-        padding: 30px;
-        width: 150px;
-        transition: 1s;
-        -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
-        -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
-        box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.2);
-        margin-top: 15px;
+    .singleItemInfo input{
+        width:45px;
+        border: 0;
+        text-align: left;
+        color: #5D5C5C;
+        -webkit-box-shadow: 0px 1px 15px 0px rgba(0,0,0,0.08);
+        -moz-box-shadow: 0px 1px 15px 0px rgba(0,0,0,0.08);
+        box-shadow: 0px 1px 15px 0px rgba(0,0,0,0.08);
     }
 
     .macros{
+        width: 312px;
+        height: 363px;
+        background-color: #fff;
+        -webkit-box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.25);
+        box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.25);
+    }
+
+    .kcal{
+        text-align: center;
+        padding: 40px 0;
+        font-size: 40px;
+    }
+    .chart{
         display: flex;
         justify-content: center;
     }
-    .macros >div{
-        background-color: #fcfcfc;
-        margin: 3px;
-        height: 200px;
-        width: 65px;
+    .macroItem span{
+        margin-left: 8px;
+    }
+
+    .macroBar{
         display: flex;
+        width: 52px;
+        height: 185px;
         align-items: flex-end;
+        margin-right: 20px;
         font-size: 8px;
-        -webkit-box-shadow: 5px 0px 5px -3px rgba(0,0,0,0.75);
-        -moz-box-shadow: 5px 0px 5px -3px rgba(0,0,0,0.75);
-        box-shadow: 5px 0px 5px -3px rgba(0,0,0,0.75);
+        margin-bottom: 10px;
     }
 
     #fat{
+        display: flex;
+        align-items: flex-end;
         justify-content: center;
-        background-color: lemonchiffon;
-        width:65px;
-        min-height: 10px;
-        transition: 2s;
+        width: 100%;
+        min-height: 5%;
+        text-align:center;
+        background-color: #F1FF00;
+        transition: 1s;
     }
-    #carb{
-        background-color: lightsalmon;
+
+    #carb{ 
+        display: flex;
+        align-items: flex-end;
         justify-content: center;
-        width: 65px;
-        min-height: 10px;
-         transition: 2s;
+        width: 100%;
+        min-height: 7%;
+        text-align:center;
+        background-color: #00EEFF;
+        transition: 1s;
     }
+
     #prot{
-        background-color: powderblue;
+        display: flex;
+        align-items: flex-end;
         justify-content: center;
-        width: 65px;
-        min-height: 10px;
-        transition: 2s;
+        width: 100%;
+        min-height: 7%;
+        align-content: flex-end;
+        text-align:center;
+        color: #fff;
+        background-color: #FF0000;
+        transition: 1s;
     }
-
-    /* Phones */
-    @media screen and (max-width: 600px){
-        main{
-            grid-template-areas:
-            "search search search search search search search search search search search search" 
-            "items items items items items items items items items items items items" 
-            "output output output output output output output output output output output output";
-        }
-
-        .searchedItems{
-            margin: 0 auto;
-            width: 100%;
-            padding: 15px;
-        }
-
-        .search-bar input{
-            width: 70%;
-        }
-
-        .singleItem{
-            display: grid;
-            width: 77%;
-            grid-template-columns: 15% 25% 40% 20%;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            
-        }
-
-        .singleItem .close{
-            padding: 20px 10px;
-            border-radius: 10px;
-            background-color: pink;
-        }
-        .searchContainer{
-            width: 77%;
-        }
-    }
-    /* Tablets and small laptops */
-    @media screen and (min-width: 600px){
-        main{
-            grid-template-areas:
-            "search search search search search search search search search search search search" 
-            "items items items items items items output output output output output output" ;
-        }
-        .search-bar input{
-            width: 60%;
-        }
-        .searchContainer{
-            width: 65%;
-        }
-        .searchedSingleItem{
-            margin: 0 auto;
-            margin-bottom: 5px;
-            padding: 10px;
-        }
-        .singleItem{
-            display: grid;
-            width: 77%;
-            grid-template-columns: 15% 25% 40% 20%;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .singleItem .close{
-            padding: 20px 10px;
-            border-radius: 10px;
-            background-color: pink;
-        }
-    }
-    /* PC */
-    @media screen and (min-width: 1000px){
-        main{
-        grid-template-areas:
-        "search search search search items items items items output output output output" ;
-        }
-        .search-bar input{
-            width: 80%;
-        }
-        .searchContainer{
-            width: 85%;
-        }
-        .singleItem{
-            display: grid;
-            width: 77%;
-            grid-template-columns: 20% 40% 20% 20%;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .singleItem .close{
-            padding: 20px 10px;
-            border-radius: 10px;
-            background-color: pink;
-        }
-    }
-
 
 </style>

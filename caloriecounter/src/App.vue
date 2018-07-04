@@ -5,8 +5,10 @@
 </template>
 
 <script>
+import SideMenu from './components/SideMenu'
+
 export default {
-  name: 'App'
+  name: 'App',
 }
 </script>
 
@@ -20,10 +22,7 @@ export default {
   #app{
     margin: 0 auto;
     font-family: 'Montserrat', sans-serif;
-    color: #2c3e50;
-  }
-  body{
-    overflow: hidden;
+    color: #000;
   }
 
 </style>
