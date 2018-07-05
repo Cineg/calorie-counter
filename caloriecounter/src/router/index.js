@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Dashboard from '@/components/Dashboard'
 import Add from '@/components/Add'
 import Home from '@/components/Home'
+import About from '@/components/About'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/add',
       name: 'add',
       component: Add
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: About
     }
   ]
 })

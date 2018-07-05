@@ -65,7 +65,7 @@ export default {
         outline: 0;
     }
 
-    @media screen and (max-width: 1024px){
+    @media screen and (max-width: 1000px){
         .wrapper{
             height: 100vh;
             width: 100vw;

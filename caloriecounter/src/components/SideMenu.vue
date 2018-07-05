@@ -6,8 +6,9 @@
         <router-link to="/add" active-class="active">
             <div class="icon" > <i class="fas fa-plus"> </i></div>
         </router-link>
-        <div class="icon"> <i class="fas fa-user"></i></div>
-        <div class="icon"><i class="fas fa-question-circle"></i></div>
+        <router-link to="/about" active-class="active">
+            <div class="icon"><i class="fas fa-question-circle"></i></div>
+        </router-link>
     </nav>
 </template>
 
@@ -56,7 +57,7 @@ export default {
         }
 
         .icon{
-            width: 120px;
+            width: 25vw;
             height: 80px;
         }
     }

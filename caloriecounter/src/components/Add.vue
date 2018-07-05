@@ -68,7 +68,6 @@ export default {
     section{
         width: 100vw;
         min-height: 100vh;
-        height: 100vh;
         background: url('../assets/dashboardbg.svg');
         background-size: cover;
         background-repeat: no-repeat;
@@ -130,7 +129,7 @@ export default {
     }
 
     .calories{
-       height: 75px;
+        height: 75px;
         font-size: 15px;
         padding-left: 20px;
         width: 30%;
@@ -163,15 +162,54 @@ export default {
         section{
             display: flex;
             flex-direction: column;
+            background: url('../assets/dashboardbgmobile.svg');
+            background-repeat: no-repeat;
+            background-size: cover;
         }
         
         h1{
             margin-top: 100px;
             font-size: 40px;
+            text-align: center;
         }
+
+        form{
+            width: 90vw;
+            margin-bottom: 25px;
+            height: inherit;
+            padding-bottom: 30px;
+        }
+
+        .row{
+            margin-top: 25px;
+        }
+        .name{
+            font-size: 18px;
+            height: 60px;
+            margin-right: 10px;
+        }
+
+        .calories{
+            height: 60px;
+            width: 33%;
+            font-size: 10px;
+            padding-left: 5px;
+        }
+
+        .rowMacros input{
+            width: 28%;
+            margin-right: 3%;
+            height: 40px;
+            font-size: 12px;
+            padding-left: 5px;
+        }
+
         button{
-            font-size: 30px;
+            margin-top: 30px;
+            font-size: 25px;
+            height: 60px;
         }
+
     }
 
 </style>
