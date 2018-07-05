@@ -262,7 +262,6 @@ export default {
         -moz-box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
         box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
         padding: 0 25px;
-        color: #B8B8B8;
     }
 
     .searchContainer{
@@ -277,17 +276,17 @@ export default {
     }
 
     .searchedItems{
-        background-color:#F9F8F8;
-        color: #B8B8B8;
+        background-color:rgba(249, 248, 248, 0.8);
+        color: rgb(58, 58, 58);
         transition: 1s;
     }
     .searchedItems:nth-child(even){
-        background-color: #F3EFEF;
+        background-color: rgba(244, 240, 240, 0.8);
     }
 
     .searchedSingleItem{
         height: 47px;
-        transition: 1s;
+        transition: .5s;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -296,6 +295,9 @@ export default {
     }
     .searchedSingleItem:hover{
         color: #000;
+        -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
     }
     .addItem{
         text-align: center;
@@ -373,9 +375,6 @@ export default {
         margin-left: 15px;
         margin-right: 15px;
     }
-    .macroItem span{
-        
-    }
 
     .macroBar{
         display: flex;
@@ -421,8 +420,9 @@ export default {
         transition: 1s;
     }
 
-    @media screen and (max-width: 800px){
+    @media screen and (max-width: 1000px){
         main{
+            min-height: 100vh;
             display: flex;
             flex-direction:column;
             background: url('../assets/dashboardbgmobile.svg');
@@ -466,5 +466,50 @@ export default {
         .singleItem{
             width: 90vw;
         }
+    }
+
+    @media screen and (max-width: 1600px) and (min-width: 1000px){
+        main{
+            display: grid;
+            min-height: 100vh;
+            grid-template-columns: 120px .5fr 1fr .5fr 1fr .5fr 1fr .5fr;
+            background: url('../assets/dashboardbg.svg');
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: cover;
+            grid-column-gap: 10px;
+            grid-template-areas:
+            'sidemenu . search . items . output .'
+        }
+        h1{
+            font-size: 30px;
+        }
+
+        #search h1{
+            margin-bottom: 28px;
+        }
+         #searchBar{
+            width: 300px;
+        }
+        .searchContainer{
+            width: 300px;
+        }
+        .searchedItems{
+            width: 300px;
+        }
+        .singleItem{
+            width: 300px;
+        }
+
+        .macros{
+            width: 250px;
+        }
+        .macroItem{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-left: 8px;
+        margin-right: 8px;
+    }
     }
 </style>

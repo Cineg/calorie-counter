@@ -26,20 +26,23 @@ export default {
         background-position: top right;
     }
     header{
+        display: flex;
+        flex-direction: column;
         margin: 0 auto;
-        padding-top: 200px;
+        width: 100vw;
+        height: 100vh;
+        justify-content: center;
         padding-left: 250px;
-        color: #000;
     }
     h1{
         font-size: 80px;
         font-weight: 700;
     }
     p{
-        margin-top: 85px;
+        margin-top: 7vh;
         width: 760px;
         font-size: 26px;
-        margin-bottom: 200px;
+        margin-bottom: 20vh;
     }
     button{
         background: #c9ffb4; /* Old browsers */
@@ -72,7 +75,6 @@ export default {
             background-position: bottom;
         }
         header{
-            padding-top: 75px;
             padding-left: 20px;
             padding-right: 20px;
             margin: 0 auto;

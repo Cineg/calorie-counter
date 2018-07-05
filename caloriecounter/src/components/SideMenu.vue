@@ -1,7 +1,11 @@
 <template>
     <nav> 
-        <div class="icon active"><i class="fas fa-home"></i></div>
-        <div class="icon"> <i class="fas fa-plus"> </i></div>
+        <router-link to="/dashboard" active-class="active">
+            <div class="icon" ><i class="fas fa-home"></i></div>
+        </router-link>
+        <router-link to="/add" active-class="active">
+            <div class="icon" > <i class="fas fa-plus"> </i></div>
+        </router-link>
         <div class="icon"> <i class="fas fa-user"></i></div>
         <div class="icon"><i class="fas fa-question-circle"></i></div>
     </nav>
@@ -19,6 +23,7 @@ export default {
         height: 100vh;
         background-color: #EBE9E9;
         padding: 160px 0;
+        grid-area: sidemenu;
     }
 
     .icon{
@@ -32,13 +37,16 @@ export default {
         height: 120px;
 
     }
-    .active{
+    .active .icon{
         background-image: linear-gradient(to left bottom, #adeff3, #98e8ed, #81e1e7, #68d9e1, #48d2db);
         color: #fefefe;
     }
 
+    a{
+        text-decoration: none;
+    }
 
-    @media screen and (max-width: 800px){
+    @media screen and (max-width: 1000px){
         nav{
             width: 100vw;
             height: 80px;
@@ -50,6 +58,16 @@ export default {
         .icon{
             width: 120px;
             height: 80px;
+        }
+    }
+
+    @media screen and (min-width: 1000px) and (max-width: 1600px){
+        nav{
+            width: 120px;
+        }
+
+        .icon{
+            height: 100px;
         }
     }
 </style>

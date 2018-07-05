@@ -1,29 +1,34 @@
 <template>
     <section>
-        <router-link to="/">
-            <button class="arrowBack"><i class="fas fa-long-arrow-alt-left"></i> <span>Powrót</span> </button>
-        </router-link>
-        
-        <div class="info"><h3>Proszę, uzupełnij pola poniżej:</h3> </div>
-        <form action="">
-            <input type="text" placeholder="Nazwa produktu" required v-model="name">
-            <input type="number" placeholder="Ile kalorii na 100g?" required v-model="calories">
-            <div class="row">
-                <input type="number" placeholder="B" v-model="protein"> 
-                <input type="number" placeholder="W" v-model="carb"> 
-                <input type="number" placeholder="T" v-model="fat">
-            </div>
-            <button @click="add"><i class="fas fa-plus"></i></button>
-        </form>
+        <side-menu />
+        <div class="wrapper">
+            <h1>Dodaj nowy produkt</h1>
+            <form action="">
+                <div class="row"> 
+                    <input type="text" placeholder="Nazwa produktu" required v-model="name" class="name">
+                     <input type="number" placeholder="Ile kalorii na 100g?" required v-model="calories" class="calories">
+                </div>
+                <div class="row rowMacros">
+                    <input type="number" placeholder="Białko" v-model="protein"> 
+                    <input type="number" placeholder="Węglowodany" v-model="carb"> 
+                    <input type="number" placeholder="Tłuszcze" v-model="fat">
+                </div>
+                <button @click="add">Dodaj</button>
+            </form>
+        </div>
     </section>
 </template>
 
 <script>
 import db from './firebaseInit'
 import firebase from 'firebase'
+import SideMenu from './SideMenu'
 
 export default {
     name: 'add',
+    components: {
+        SideMenu,
+    },
     data: function(){
         return{
             name: '',
@@ -59,89 +64,116 @@ export default {
 </script>
 
 <style scoped>
+
     section{
-    -webkit-box-shadow: 5px 5px 5px -5px rgba(0,0,0,0.75);
-    -moz-box-shadow: 5px 5px 5px -5px rgba(0,0,0,0.75);
-    box-shadow: 5px 5px 5px -5px rgba(0,0,0,0.75);
-    width: 300px;
-        padding: 50px;
-        margin: 0 auto;
+        width: 100vw;
+        min-height: 100vh;
+        height: 100vh;
+        background: url('../assets/dashboardbg.svg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: top right;
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        grid-template-areas: 
+        'sidemenu newitem '
+    }
+
+    side-menu{
+        grid-area: sidemenu;
+    }
+    .wrapper{
         display: flex;
         flex-direction: column;
-        margin-top: 70px;
+        justify-content: center;
         align-items: center;
-        background-color: #7FDBFF;
+        grid-area: newitem;
     }
-    h3{
-        margin-bottom: 20px;
+
+    h1{
+        font-size: 55px;
+        margin-bottom: 40px;
     }
     form{
+        background-color: #fff;
+        width: 60vw;
+        max-width: 950px;
+        max-height: 450px;
+        height: 50vh;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        -webkit-box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.18);
+        -moz-box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.18);
+        box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.18);
     }
+
     input{
-        padding: 6px;
-        width: 200px;
-        font-size: 16px;
+        background-color: #FCFCFC;
         border: 0;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        -webkit-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.75);
-        -moz-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.75);
-        box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.75);
+        -webkit-box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
+        -moz-box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
+        box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
     }
-    
-    .row {
+    .row{
         display: flex;
-        margin-bottom: 15px;
+        margin-top: 50px;
+        justify-content: center;
     }
-    .row input{
+
+    .name{
+        height: 75px;
+        font-size: 25px;
+        padding: 20px;
+        width: 60%;
+        align-self: center;
+        margin-right: 20px;
+    }
+
+    .calories{
+       height: 75px;
+        font-size: 15px;
+        padding-left: 20px;
         width: 30%;
-        margin: 0 auto;
+        align-self: center;
+    }
+
+    .rowMacros input{
+        width: 20%;
+        max-width: 210px;
+        margin-right: 3%;
+        height: 60px;
+        padding-left: 20px;
     }
 
     button{
-        cursor: pointer;
-        margin-top: 5px;
-        padding: 8px;
-        width: 40px;
-        height: 40px;
-        background-color: #0074D9;
-        border: none;
-        border-radius: 50%;
-        color: mintcream;
-        -webkit-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.75);
-        -moz-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.75);
-        box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.75);
-        font-size: 20px;
+        margin: 0 auto;
+        margin-top: 50px;
+        border: 0;
+        background: #D7F7A5;
+        height: 80px;
+        width: 60%;
+        font-size: 38px;
+        -webkit-box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
+        -moz-box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
+        box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
     }
 
-    input:focus, button:focus{
-        outline: 0;
+    @media screen and (max-width: 1000px){
+
+        section{
+            display: flex;
+            flex-direction: column;
+        }
+        
+        h1{
+            margin-top: 100px;
+            font-size: 40px;
+        }
+        button{
+            font-size: 30px;
+        }
     }
-    .arrowBack{
-        -webkit-box-shadow: 2px 2px 2px -2px rgba(0,0,0,0.75);
-        -moz-box-shadow: 2px 2px 2px -2px rgba(0,0,0,0.75);
-        box-shadow: 2px 2px 2px -2px rgba(0,0,0,0.75);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        top: -50px;
-        left: -80px;
-        font-size: 30px;
-        padding: 0;
-        border-radius: 0;
-        width: 120px;
-    }
-    .arrowBack span{
-        font-size: 20px;
-        padding-left: 10px;
-    }
-    a {
-        text-decoration: none;
-    }
+
 </style>
 
 
