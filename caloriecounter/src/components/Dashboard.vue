@@ -38,31 +38,28 @@
             <div class="info">
                 <h1>Wyniki</h1>
             </div>
-            <div class="macros" v-if="kcalCalculated">
+            <div class="macros">
                 <div class="kcal" >{{kcalCalculated}} kcal</div>
                 <div class="chart">
                     <div class="macroItem">
                         <div class="macroBar">
-                            <div id="fat" :style="{height: [fatHeight+'%']}">
-                                Tłuszcze
-                            </div>
+                            <div id="fat" :style="{height: [fatHeight+'%']}"></div>
                         </div>
+                        Tłuszcze
                         <span>{{fatCalculated}}g</span>
                     </div>
                     <div class="macroItem">
                         <div class="macroBar">
-                            <div id="carb" :style="{height: [carbHeight+'%']}">
-                                Węglowod.
-                            </div>
+                            <div id="carb" :style="{height: [carbHeight+'%']}"></div>
                         </div>
+                         Węglowod.
                         <span>{{carbCalculated}}g</span>
                     </div>
                     <div class="macroItem">
                         <div class="macroBar">
-                            <div id="prot" :style="{height: [protHeight+'%']}">
-                                Białko
-                            </div>
+                            <div id="prot" :style="{height: [protHeight+'%']}"></div>
                         </div>
+                        Białka
                         <span>{{proteinCalculated}}g</span>
                     </div>
        
@@ -220,11 +217,26 @@ export default {
     
     main{
         display: grid;
-        grid-template-columns: 160px 1fr 1fr 1fr;
+        grid-template-columns: 160px .5fr 1fr .5fr 1fr .5fr 1fr .5fr;
         background: url('../assets/dashboardbg.svg');
         background-repeat: no-repeat;
         background-position: right;
-        grid-column-gap: 8vw;
+        grid-column-gap: 10px;
+        grid-template-areas:
+        'sidemenu . search . items . output .'
+    }
+
+    side-menu{
+        grid-area: sidemenu;
+    }
+    #search{
+        grid-area: search;
+    }
+    #items{
+        grid-area: items;
+    }
+    #output{
+        grid-area: output;
     }
     
     section{
@@ -346,15 +358,23 @@ export default {
 
     .kcal{
         text-align: center;
-        padding: 40px 0;
+        padding: 30px 0;
         font-size: 40px;
     }
     .chart{
         display: flex;
         justify-content: center;
     }
+
+    .macroItem{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
     .macroItem span{
-        margin-left: 8px;
+        
     }
 
     .macroBar{
@@ -362,7 +382,6 @@ export default {
         width: 52px;
         height: 185px;
         align-items: flex-end;
-        margin-right: 20px;
         font-size: 8px;
         margin-bottom: 10px;
     }
@@ -374,7 +393,7 @@ export default {
         width: 100%;
         min-height: 5%;
         text-align:center;
-        background-color: #F1FF00;
+        background-image: linear-gradient(to left bottom, #eee956, #efef5d, #f0f463, #f0fa6a, #f1ff71);
         transition: 1s;
     }
 
@@ -385,7 +404,7 @@ export default {
         width: 100%;
         min-height: 7%;
         text-align:center;
-        background-color: #00EEFF;
+        background-image: linear-gradient(to left bottom, #e8f9f9, #d2f5f6, #baf0f3, #a1ecf1, #84e7ef);
         transition: 1s;
     }
 
@@ -398,8 +417,54 @@ export default {
         align-content: flex-end;
         text-align:center;
         color: #fff;
-        background-color: #FF0000;
+        background-image: linear-gradient(to left bottom, #fbd9d9, #f1c4c4, #e7afae, #dc9a9a, #d18585);
         transition: 1s;
     }
 
+    @media screen and (max-width: 800px){
+        main{
+            display: flex;
+            flex-direction:column;
+            background: url('../assets/dashboardbgmobile.svg');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        h1{
+            font-size: 25px;
+            margin-bottom: 25px;
+        }
+
+        #search{
+            margin: 0 auto;
+            margin-top: 60px;
+        }
+        
+        #items{
+            margin: 0 auto;
+            margin-top: 30px;
+        }
+
+        #output{
+            margin: 0 auto;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        #searchBar{
+            width: 90vw;
+        }
+        .searchContainer{
+            width: 90vw;
+        }
+        .searchedItems{
+            width: 90vw;
+        }
+        .searchedSingleItem{
+            width: 90vw;
+        }
+
+        .singleItem{
+            width: 90vw;
+        }
+    }
 </style>

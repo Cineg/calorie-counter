@@ -36,4 +36,20 @@ export default {
         background-image: linear-gradient(to left bottom, #adeff3, #98e8ed, #81e1e7, #68d9e1, #48d2db);
         color: #fefefe;
     }
+
+
+    @media screen and (max-width: 800px){
+        nav{
+            width: 100vw;
+            height: 80px;
+            display: flex;
+            padding: 0;
+            justify-content: center;
+        }
+
+        .icon{
+            width: 120px;
+            height: 80px;
+        }
+    }
 </style>
